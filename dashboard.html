@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | ProHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav>
+        <a href="index.html" class="nav-logo">ProHub</a>
+        <div class="nav-links">
+            <a href="index.html">Directory</a>
+            <a href="#" id="logout-btn">Log Out</a>
+        </div>
+    </nav>
+
+    <main>
+        <header class="dashboard-header">
+            <div>
+                <h1 id="welcome-text">Welcome, User!</h1>
+                <p>Manage your professional profile and visibility.</p>
+            </div>
+            <a href="index.html" class="view-profile-btn">View Directory</a>
+        </header>
+
+        <div class="dashboard-grid">
+            <aside class="profile-preview-card">
+                <div class="user-avatar" id="avatar-preview"
+                    style="width: 80px; height: 80px; font-size: 2rem; margin: 0 auto 1.5rem auto;">U</div>
+                <h3 id="name-preview">User Name</h3>
+                <p id="headline-preview" style="color: #64748b; font-size: 0.9rem;">Professional Headline</p>
+                <hr style="margin: 1.5rem 0; opacity: 0.1;">
+                <p style="font-size: 0.85rem; color: #94a3b8;">Profile Status</p>
+                <span
+                    style="background: #dcfce7; color: #166534; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 700;">LIVE</span>
+            </aside>
+
+            <section class="edit-form-card">
+                <h2 style="margin-bottom: 2rem; font-size: 1.5rem;">Edit Your Profile</h2>
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="display-name">Display Name</label>
+                        <input type="text" id="display-name" placeholder="Seth Afeku" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="headline">Professional Headline</label>
+                        <input type="text" id="headline" placeholder="Web Developer | AI Enthusiast">
+                    </div>
+                    <div class="form-group">
+                        <label for="about">About Me</label>
+                        <textarea id="about"
+                            style="width: 100%; padding: 0.75rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; font-family: inherit; min-height: 120px;"
+                            placeholder="Briefly describe yourself..."></textarea>
+                    </div>
+                    <button type="submit" class="auth-btn">Save Changes</button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Check Auth
+        if (localStorage.getItem('is_logged_in') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        // Initialize Data
+        const userName = localStorage.getItem('user_name') || 'User';
+        document.getElementById('welcome-text').textContent = `Welcome, ${userName.split(' ')[0]}!`;
+        document.getElementById('name-preview').textContent = userName;
+        document.getElementById('display-name').value = userName;
+        document.getElementById('avatar-preview').textContent = userName.substring(0, 2).toUpperCase();
+
+        // Load existing profile data
+        const savedProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+        if (savedProfile.headline) {
+            document.getElementById('headline').value = savedProfile.headline;
+            document.getElementById('headline-preview').textContent = savedProfile.headline;
+        }
+        if (savedProfile.about) {
+            document.getElementById('about').value = savedProfile.about;
+        }
+
+        // Handle Profile Update
+        document.getElementById('profile-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const profile = {
+                name: document.getElementById('display-name').value,
+                headline: document.getElementById('headline').value,
+                about: document.getElementById('about').value
+            };
+            localStorage.setItem('user_profile', JSON.stringify(profile));
+            localStorage.setItem('user_name', profile.name);
+
+            // Update preview
+            document.getElementById('name-preview').textContent = profile.name;
+            document.getElementById('headline-preview').textContent = profile.headline;
+            document.getElementById('avatar-preview').textContent = profile.name.substring(0, 2).toUpperCase();
+
+            alert('Profile updated successfully!');
+        });
+
+        // Handle Logout
+        document.getElementById('logout-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+
+</html>

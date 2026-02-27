@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Professional Hub | CV & Project Directory</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.c
+    om">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
@@ -16,7 +17,11 @@
         <a href="index.html" class="nav-logo">ProHub</a>
         <div class="nav-links">
             <a href="index.html">Directory</a>
-            <a href="template.html">Create Yours</a>
+            <span id="auth-nav">
+                <a href="login.html">Login</a>
+                <a href="signup.html" class="view-profile-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Join
+                    Now</a>
+            </span>
         </div>
     </nav>
 
@@ -70,6 +75,40 @@
     <footer>
         <p>&copy; 2026 Professional Hub. All rights reserved.</p>
     </footer>
+
+    <script>
+        // Check login status for navigation
+        const isLoggedIn = localStorage.getItem('is_logged_in') === 'true';
+        const authNav = document.getElementById('auth-nav');
+
+        if (isLoggedIn) {
+            authNav.innerHTML = `
+                <a href="dashboard.html">Dashboard</a>
+                <a href="#" id="logout-link" style="color: #ef4444;">Logout</a>
+            `;
+
+            document.getElementById('logout-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.clear();
+                window.location.reload();
+            });
+
+            // Update directory with user's profile if it exists
+            const profile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+            if (profile.name) {
+                const directory = document.querySelector('.user-directory');
+                const userCard = document.createElement('div');
+                userCard.className = 'user-card';
+                userCard.innerHTML = `
+                    <div class="user-avatar">${profile.name.substring(0, 2).toUpperCase()}</div>
+                    <h3>${profile.name} (You)</h3>
+                    <p>${profile.headline || 'Profile Incomplete'}</p>
+                    <a href="dashboard.html" class="view-profile-btn">Edit Profile</a>
+                `;
+                directory.prepend(userCard);
+            }
+        }
+    </script>
 </body>
 
 </html>
