@@ -221,6 +221,7 @@ footer {
     margin-bottom: 1rem;
     background: linear-gradient(to right, var(--accent-color), #818cf8);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
